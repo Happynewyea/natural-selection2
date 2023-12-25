@@ -21,15 +21,20 @@ clock = pygame.time.Clock()
 mothLife = []
 batLife = []
 
-a = 21
-for i in range(2):
+
+mts = []
+a = 300
+for i in range(30):
     mothes = pygame.Rect(np.random.randint(WIDTH / 2 - a, WIDTH / 2 + a + 1), np.random.randint(HEIGHT / 2 - a, HEIGHT / 2 + a + 1), 10, 10)
+    moths_range = pygame.Rect(mothes.centerx, mothes.centery, np.random.randint(20, 61), np.random.randint(20, 61))
+
     mothLife.append(mothes)
+    
 
 bts = []
-for i in range(1):
-    bates = pygame.Rect(np.random.randint(445, 451), np.random.randint(450, 451), 40, 40)
-    bats_range = pygame.Rect(bates.centerx, bates.centery, 160, 160)
+for i in range(10):
+    bates = pygame.Rect(np.random.randint(440, 461), np.random.randint(440, 461), 40, 40)
+    bats_range = pygame.Rect(bates.centerx, bates.centery, np.random.randint(120, 201), np.random.randint(120, 201))
 
     bts.append(bates)
     bts.append(bats_range)
@@ -68,12 +73,12 @@ while True:
 
     screen.fill(WHITE)
 
-    pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(150, 150, WIDTH - 300, HEIGHT - 300))
+    pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(50, 50, WIDTH - 100, HEIGHT - 100))
 
 
     for bats in batLife:
         detect_bat(bats, mothLife)
-        pygame.draw.circle(screen, (0, 255, 0), bats[1].center, 80)
+        pygame.draw.circle(screen, (0, 255, 0), bats[1].center, bats[1][3]/2)
         
     for bats in batLife:
         pygame.draw.circle(screen, (255, 0, 0), bats[0].center, 20)
@@ -86,4 +91,4 @@ while True:
     pygame.display.flip()
 
     
-    clock.tick(1)
+    clock.tick(30)
