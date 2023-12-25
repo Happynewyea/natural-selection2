@@ -1,4 +1,5 @@
-from brain import detect, movement_bat, movement_moth
+from brain import detect, detect_bat, movement_bat, movement_moth
+from position import distance
 import numpy as np
 import pygame
 import sys
@@ -20,17 +21,17 @@ clock = pygame.time.Clock()
 mothLife = []
 batLife = []
 
-
-for i in range(10):
-    moths = pygame.Rect(np.random.randint(100, 201), np.random.randint(100, 201), 10, 10)
-    mothLife.append(moths)
+a = 21
+for i in range(2):
+    mothes = pygame.Rect(np.random.randint(WIDTH / 2 - a, WIDTH / 2 + a + 1), np.random.randint(HEIGHT / 2 - a, HEIGHT / 2 + a + 1), 10, 10)
+    mothLife.append(mothes)
 
 bts = []
-for i in range(10):
-    bats = pygame.Rect(np.random.randint(250, 301), np.random.randint(400, 601), 40, 40)
-    bats_range = pygame.Rect(bats.centerx, bats.centery, 160, 160)
+for i in range(1):
+    bates = pygame.Rect(np.random.randint(445, 451), np.random.randint(450, 451), 40, 40)
+    bats_range = pygame.Rect(bates.centerx, bates.centery, 160, 160)
 
-    bts.append(bats)
+    bts.append(bates)
     bts.append(bats_range)
     batLife.append(bts)
 
@@ -44,26 +45,38 @@ while True:
             sys.exit()
     
     for moths in mothLife:
+        for bats in batLife:
+            if distance(moths, bats[0]) < 20:
+                mothLife.remove(moths)
+                print(f"Killed. {len(mothLife)} left")
+                break
+
         movement_moth(moths)
         if moths.left <= 0: moths.left = 0
         if moths.right >= WIDTH: moths.right = WIDTH
         if moths.top <= 0: moths.top = 0
         if moths.bottom >= HEIGHT: moths.bottom = HEIGHT
         
+        
     for bats in batLife:
         movement_bat(bats)
-        if bats[0].left <= 0: bats[0].left = 0
-        if bats[0].right >= WIDTH: bats[0].right = WIDTH
-        if bats[0].top <= 0: bats[0].top = 0
-        if bats[0].bottom >= HEIGHT: bats[0].bottom = HEIGHT
+        if bats[0].left <= 0 + 150: bats[0].left = 0 + 150
+        if bats[0].right >= WIDTH - 150: bats[0].right = WIDTH - 150
+        if bats[0].top <= 0 + 150: bats[0].top = 0 + 150
+        if bats[0].bottom >= HEIGHT - 150: bats[0].bottom = HEIGHT - 150
+        
 
     screen.fill(WHITE)
 
-    for bats in batLife:
-        pygame.draw.circle(screen, (0, 255, 0), bats[1].center, 80)
+    pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(150, 150, WIDTH - 300, HEIGHT - 300))
+
 
     for bats in batLife:
-        pygame.draw.circle(screen, RED, bats[0].center, 20)
+        detect_bat(bats, mothLife)
+        pygame.draw.circle(screen, (0, 255, 0), bats[1].center, 80)
+        
+    for bats in batLife:
+        pygame.draw.circle(screen, (255, 0, 0), bats[0].center, 20)
         
 
     for moths in mothLife:
@@ -73,4 +86,4 @@ while True:
     pygame.display.flip()
 
     
-    clock.tick(30)
+    clock.tick(1)
